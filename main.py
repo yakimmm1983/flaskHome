@@ -2,8 +2,9 @@ from flask import Flask,render_template,request,redirect
 import requests
 from env import *
 app = Flask(__name__)
-@app.route("/",methods=['POST','GET'])
-def main():
+saved_user = None
+@app.route("/auth",methods=['POST','GET'])
+def auth():
     message = ""
     if request.method == "POST":
         password = request.form.get("password")
@@ -16,8 +17,36 @@ def main():
         if response.status_code == 401:
             message = "Авторизация не успешна"
         else:
+            global saved_user
+            saved_user = response.json()
             return redirect("/home")
-    return render_template("index.html",message=message)
+    return render_template("auth.html",message=message)
+@app.route("/signup",methods=['POST','GET'])
+def signup():
+    message = ""
+    if request.method == "POST":
+        password = request.form.get("password")
+        username = request.form.get("username")
+        full_name = request.form.get("full_name")
+        data = {
+            "login":username,
+            "password":password,
+            "full_name":full_name
+        }
+        response = requests.post(f"{BACKEND_URL}signup",json=data)
+        if response.status_code == 401:
+            message = "Регистрация не успешна"
+        else:
+            return redirect("/auth")
+    return render_template("signup.html",message=message)
+@app.route("/",methods=["GET"])
+def main():
+    global saved_user
+    if saved_user is None:
+        return redirect("/auth")
+    else:
+        return redirect("/home")
+
 @app.route("/home",methods=['POST','GET'])
 def home():
     if request.method == "GET":
