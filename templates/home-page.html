@@ -3,8 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href = "{{ url_for('static',filename='stylesheet.css') }}">
 </head>
 <body>
+<div class = header>
+    <a class = icon-link data-title = "Вход в личный кабинет" href="http://127.0.0.1:5000/user-cabinet">
+        <img  class = icon src="{{ url_for('static', filename='icons/account.svg') }}">
+    </a>
+</div>
 home
 </body>
 </html>

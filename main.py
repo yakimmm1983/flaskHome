@@ -1,8 +1,11 @@
 from flask import Flask,render_template,request,redirect
 import requests
 from env import *
+from models.UserModel import UserModel
 app = Flask(__name__)
 saved_user = None
+def Convert(usermodel:UserModel):
+    return usermodel
 @app.route("/auth",methods=['POST','GET'])
 def auth():
     message = ""
@@ -18,7 +21,7 @@ def auth():
             message = "Авторизация не успешна"
         else:
             global saved_user
-            saved_user = response.json()
+            saved_user = Convert(response.json())
             return redirect("/home")
     return render_template("auth.html",message=message)
 @app.route("/signup",methods=['POST','GET'])
@@ -34,6 +37,7 @@ def signup():
             "full_name":full_name
         }
         response = requests.post(f"{BACKEND_URL}signup",json=data)
+
         if response.status_code == 401:
             message = "Регистрация не успешна"
         else:
@@ -51,6 +55,16 @@ def main():
 def home():
     if request.method == "GET":
         pass
+
     return render_template("home-page.html")
+@app.route("/user-cabinet",methods=['POST','GET'])
+def user_cabient():
+    global saved_user
+    if request.method == "GET":
+        pass
+    return render_template("user-cabinet.html",
+                           username=saved_user["full_name"],
+                           login=saved_user["login"]
+                           )
 if __name__ == "__main__":
     app.run()
