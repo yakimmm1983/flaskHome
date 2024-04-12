@@ -11,6 +11,9 @@
         <img  class = icon src="{{ url_for('static', filename='icons/account.svg') }}">
     </a>
 </div>
-home
+{% for note in notes %}
+<h2>{{ note['note_name'] }}</h2>
+<p> {{ note['note_content'] }}</p>
+{% endfor %}
 </body>
 </html>
