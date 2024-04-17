@@ -69,5 +69,24 @@ def user_cabient():
                            username=saved_user["full_name"],
                            login=saved_user["login"]
                            )
+def add_note():
+    message = ""
+    if request.method == "POST":
+        user_id = request.form.get("user_id")
+        note_name = request.form.get("note_name")
+        note_content = request.form.get("note_content")
+        data = {
+            "user_id":user_id,
+            "note_name":note_name,
+            "note_content":note_content
+        }
+        response = requests.post(f"{BACKEND_URL}add-note",json=data)
+
+        if response.status_code != 200:
+            message = "Заметка не создана"
+
+    return render_template("home-page.html",message=message)
+
+
 if __name__ == "__main__":
     app.run()

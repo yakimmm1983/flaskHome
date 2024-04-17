@@ -15,5 +15,20 @@
 <h2>{{ note['note_name'] }}</h2>
 <p> {{ note['note_content'] }}</p>
 {% endfor %}
+
+<form action="" method="post">
+    <p>
+        <label for="note_name">Имя пользователя</label>
+        <input type="text" name ="note_name">
+    </p>
+    <p>
+        <label for="note_content">Заметки пользователя</label>
+        <input type="text" name ="note_content">
+    </p>
+    <p>
+        <input type="submit" value="Добавить заметку">
+    </p>
+</form>
+
 </body>
 </html>
